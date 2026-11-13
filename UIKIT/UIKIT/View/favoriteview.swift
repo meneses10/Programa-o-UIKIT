@@ -5,14 +5,23 @@
 //  Created by Carlos Eduardo de Sousa Meneses on 12/11/26.
 //
 
-import SwiftUI
+import UIKit
 
-struct favoriteview: View {
-    var body: some View {
-        Text("He!")
+class favoriteViewController: UIViewController{
+    private let texto = UILabel()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        view.addSubview(texto)
+        NSLayoutConstraint.activate([
+            texto.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            texto.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
     }
 }
 
-#Preview {
-    favoriteview()
+#Preview{
+    let visualizarTela = HomeViewController()
+    return visualizarTela
 }
+
