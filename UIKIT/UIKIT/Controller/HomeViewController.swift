@@ -53,6 +53,16 @@ class HomeViewController: UIViewController {
             
         ])
     }
+    @objc private func showSheet() {
+        let sheet = AddTripController()
+            //estilos de sheet
+        sheet.modalPresentationStyle = .pageSheet
+        //Condicao para que apareça sheet ou não
+        if let sheetController = sheet.sheetPresentationController{
+            
+        }
+        
+    }
 }
 
 #Preview {
