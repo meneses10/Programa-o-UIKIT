@@ -21,15 +21,17 @@ class HomeViewController: UIViewController {
     } ()
     private let acaoBotao: UIButton = {
         let botao = UIButton(type: .system)
-        botao.setTitle("Aperte esse botão", for: .normal)
+        botao.setTitle("Adicione suas viagens", for: .normal)
         botao.translatesAutoresizingMaskIntoConstraints = false
         return botao
     } ()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         texto.translatesAutoresizingMaskIntoConstraints = false
+        texto.font = .systemFont(ofSize: 200)
+        texto.font = UIFont.boldSystemFont(ofSize: 24)
+
         view.addSubview(texto)
         view.addSubview(acaoBotao)
         view.addSubview(colocarTexto)
