@@ -1,31 +1,30 @@
 //
-//  ViewController.swift
+//  MainScreenController.swift
 //  UIKIT
 //
 //  Created by Carlos Eduardo de Sousa Meneses on 11/11/26.
 //
 
 import UIKit
+
 class MainScreenController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        let home_tab = HomeViewController()
-        home_tab.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), selectedImage: UIImage(systemName: "house.fill"))
-        
-    
+        let homeTab = HomeViewController()
+        homeTab.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), selectedImage: UIImage(systemName: "house.fill"))
+        homeTab.title = "Listar suas viagens."
 
-        let favorite_tab = favoriteViewController()
-        favorite_tab.tabBarItem = UITabBarItem(title: "Home",image: UIImage(systemName: "star"), selectedImage: UIImage(systemName: "star.fill"))
+        let favoriteTab = FavoriteViewController()
+        favoriteTab.tabBarItem = UITabBarItem(title: "Favoritos", image: UIImage(systemName: "star"), selectedImage: UIImage(systemName: "star.fill"))
+        favoriteTab.title = "Favoritos"
+
         viewControllers = [
-            UINavigationController(rootViewController: home_tab),
-            UINavigationController(rootViewController: favorite_tab)
+            UINavigationController(rootViewController: homeTab),
+            UINavigationController(rootViewController: favoriteTab)
         ]
     }
-  
-    
 }
 
-#Preview{
-    let visualizarTela = MainScreenController()
-    return visualizarTela
+#Preview {
+    MainScreenController()
 }
