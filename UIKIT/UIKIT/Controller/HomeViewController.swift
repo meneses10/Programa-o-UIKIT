@@ -28,6 +28,7 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+        acaoBotao.addTarget(self, action: #selector(showSheet), for: .touchUpInside)
         texto.translatesAutoresizingMaskIntoConstraints = false
         texto.font = .systemFont(ofSize: 200)
         texto.font = UIFont.boldSystemFont(ofSize: 24)
@@ -39,14 +40,9 @@ class HomeViewController: UIViewController {
             //Texto centralizado para o navigationTitle
             texto.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             texto.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            
             //botao centralizado pegando como referencia a view
             acaoBotao.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            
             acaoBotao.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            
-            
-            
             //Centralizacao do botão
             colocarTexto.bottomAnchor.constraint(equalTo: acaoBotao.topAnchor),
             colocarTexto.centerXAnchor.constraint(equalTo: acaoBotao.centerXAnchor)
@@ -59,8 +55,11 @@ class HomeViewController: UIViewController {
         sheet.modalPresentationStyle = .pageSheet
         //Condicao para que apareça sheet ou não
         if let sheetController = sheet.sheetPresentationController{
-            
+            sheetController.detents = [.medium(), .large()]
+            sheetController.prefersGrabberVisible = true
+            sheetController.preferredCornerRadius = 20
         }
+            present(sheet, animated: true)
         
     }
 }
