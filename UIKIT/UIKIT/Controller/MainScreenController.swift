@@ -12,7 +12,7 @@ class MainScreenController: UITabBarController {
         super.viewDidLoad()
         let homeTab = HomeViewController()
         homeTab.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), selectedImage: UIImage(systemName: "house.fill"))
-        homeTab.title = "Listar suas viagens."
+        homeTab.title = "Liste suas viagens"
 
         let favoriteTab = FavoriteViewController()
         favoriteTab.tabBarItem = UITabBarItem(title: "Favoritos", image: UIImage(systemName: "star"), selectedImage: UIImage(systemName: "star.fill"))
