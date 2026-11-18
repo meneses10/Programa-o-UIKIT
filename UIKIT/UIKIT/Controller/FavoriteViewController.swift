@@ -23,7 +23,8 @@ class FavoriteViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-
+    
+        //O tipo UITABLEVIEW é muito usado para criação de tabelas
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.separatorStyle = .none
