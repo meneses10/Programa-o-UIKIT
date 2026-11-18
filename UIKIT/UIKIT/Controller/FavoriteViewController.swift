@@ -9,7 +9,7 @@ import UIKit
 
 struct FavoriteItem {
     let title: String
-    let subtitle: String
+    let durationTrip: String
 }
 
 class FavoriteViewController: UIViewController {
@@ -34,6 +34,8 @@ class FavoriteViewController: UIViewController {
         return tableView
     }()
 
+
+    //TExto de espaços vazios qunado não tiver favoritos
     private let emptyLabel: UILabel = {
         let label = UILabel()
         label.text = "Nenhum favorito encontrado"
@@ -66,6 +68,9 @@ class FavoriteViewController: UIViewController {
         setupLayout()
         filterFavorites(matching: "")
     }
+    
+    
+    
 
     private func setupNavigationBarAppearance() {
         let appearance = UINavigationBarAppearance()
@@ -97,11 +102,12 @@ class FavoriteViewController: UIViewController {
         navigationItem.preferredSearchBarPlacement = .stacked
         searchController.searchBar.delegate = self
     }
-
+    
+//funcão que guarda sobre o posicionamento e adiciona uma subview
     private func setupLayout() {
         view.addSubview(sectionLabel)
         view.addSubview(tableView)
-        view.addSubview(emptyLabel)
+        view.addSubview(emptyLabel) //Texto de "Nenhum favorito encontrado"
 
         NSLayoutConstraint.activate([
             sectionLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
@@ -120,10 +126,11 @@ class FavoriteViewController: UIViewController {
         ])
     }
 
-    private func filterFavorites(matching query: String) {
-        currentQuery = query
+    //Query = consulta
+    private func filterFavorites(matching consulta: String) {
+        currentQuery = consulta
         emptyLabel.isHidden = false
-        tableView.reloadData()
+        tableView.reloadData() //Filtro dos dados da ultima consulta para colocar na tabela
     }
 }
 

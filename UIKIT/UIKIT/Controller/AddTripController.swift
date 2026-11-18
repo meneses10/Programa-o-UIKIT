@@ -11,7 +11,7 @@ class AddTripController: UIViewController {
     
     private let tituloLabel: UILabel = {
         let label = UILabel()
-        label.text = "Adicionar viagem"
+        label.text = "Adicione sua viagem"
         label.font = UIFont.boldSystemFont(ofSize: 22)
         label.textAlignment = .center
         return label
@@ -118,7 +118,10 @@ class AddTripController: UIViewController {
             stackView.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24)
         ])
     }
-    
+    private func setupLayout()  {
+        //Espaço destinado para posicionamento dos elementos
+        //Inserção de subView.
+    }
     private func makeLabel(_ text: String) -> UILabel {
         let label = UILabel()
         label.text = text
@@ -126,12 +129,12 @@ class AddTripController: UIViewController {
         return label
     }
     
-    
-    @objc private func fecharSheet() {
+     
+    @objc private func fecharSheet() { //Funça2o para fechar
         dismiss(animated: true)
     }
 
-    @objc private func salvar() {
+    @objc private func salvar() { //Função para salvar
     }
 }
 
