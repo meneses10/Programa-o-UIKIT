@@ -56,7 +56,7 @@ class AddTripController: UIViewController {
         button.setTitle("Fechar", for: .normal)
         return button
     }()
-
+    
     private let salvarButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Salvar", for: .normal)
@@ -79,23 +79,23 @@ class AddTripController: UIViewController {
         let dataIdaLabel = makeLabel("Data de ida")
         let dataVoltaLabel = makeLabel("Data de volta")
         let favoritoLabel = makeLabel("Favoritar")
-
+        
         let dataIdaStack = UIStackView(arrangedSubviews: [dataIdaLabel, dataIdaPicker])
         dataIdaStack.axis = .horizontal
         dataIdaStack.alignment = .center
         dataIdaStack.distribution = .equalSpacing
-
+        
         let dataVoltaStack = UIStackView(arrangedSubviews: [dataVoltaLabel, dataVoltaPicker])
         dataVoltaStack.axis = .horizontal
         dataVoltaStack.alignment = .center
         dataVoltaStack.distribution = .equalSpacing
-
+        
         
         let favoritoStack = UIStackView(arrangedSubviews: [favoritoLabel, favoritoSwitch])
         favoritoStack.axis = .horizontal
         favoritoStack.alignment = .center
         favoritoStack.distribution = .equalSpacing
-
+        
         
         let stackView = UIStackView(arrangedSubviews: [
             headerStack,
@@ -131,14 +131,59 @@ class AddTripController: UIViewController {
         return label
     }
     
-     
+    
     @objc private func fecharSheet() { //Funça2o para fechar
         dismiss(animated: true)
     }
-
+    
     @objc private func salvar() { //Função para salvar
+        let place = nomeTextField.text?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         
+        guard !place.isEmpty else{
+            showAlert(message: "Digite o lugar da viagem")
+            return
+        }
+        
+        guard dataVoltaPicker.date >= dataIdaPicker.date else{
+            showAlert(message: "Data de volta tem que ser depois da data de ida")
+            return
+        }
+        let days = Calendar.current.dateComponents(
+            [.day],
+            from: dataIdaPicker.date,
+            to: dataVoltaPicker.date
+        ).day ?? 0
+        
+        let trip = InfoTrip(
+            place:place,
+            DataIda: dataIdaPicker.date,
+            DataVotla: dataVoltaPicker.date,
+            Duration: days,
+            IsFavorite: favoritoSwitch.isOn
+        )
+        let context = DataController.shared.context
+        context.insert(trip)
+        do{
+            try context.save()
+            dismiss(animated: true)
+        }catch{
+            showAlert(message: "Não deu certo registrar sua viagem")
+            print("Não deu certo registrar")
+        }
     }
+    
+    
+    private func showAlert(message:String){
+        let alert = UIAlertController(
+            title: "atenção",
+            message: message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+    
 }
 
 #Preview {
