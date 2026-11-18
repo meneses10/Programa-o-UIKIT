@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftData
 
 class HomeViewController: UIViewController {
     private let texto = UILabel()

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftData
 
 class AddTripController: UIViewController {
     
@@ -118,6 +119,7 @@ class AddTripController: UIViewController {
             stackView.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -24)
         ])
     }
+    
     private func setupLayout()  {
         //Espaço destinado para posicionamento dos elementos
         //Inserção de subView.
@@ -135,6 +137,7 @@ class AddTripController: UIViewController {
     }
 
     @objc private func salvar() { //Função para salvar
+        
     }
 }
 
