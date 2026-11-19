@@ -9,6 +9,7 @@ import UIKit
 import SwiftData
 
 class AddTripController: UIViewController {
+    var onSave: (() -> Void)?
     
     private let tituloLabel: UILabel = {
         let label = UILabel()
@@ -166,6 +167,7 @@ class AddTripController: UIViewController {
         context.insert(trip)
         do{
             try context.save()
+            onSave?()
             dismiss(animated: true)
         }catch{
             showAlert(message: "Não deu certo registrar sua viagem")
