@@ -6,14 +6,9 @@
 //
 
 import UIKit
-
-struct FavoriteItem {
-    let title: String
-    let durationTrip: String
-}
+import SwiftData
 
 class FavoriteViewController: UIViewController {
-    //Texto de "seus favoritos"
     private let sectionLabel: UILabel = {
         let label = UILabel()
         label.text = "Seus favoritos"
@@ -23,8 +18,7 @@ class FavoriteViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-        //O tipo UITABLEVIEW é muito usado para criação de tabelas
+
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.separatorStyle = .none
@@ -35,8 +29,6 @@ class FavoriteViewController: UIViewController {
         return tableView
     }()
 
-
-    //TExto de espaços vazios qunado não tiver favoritos
     private let emptyLabel: UILabel = {
         let label = UILabel()
         label.text = "Nenhum favorito encontrado"
@@ -48,8 +40,9 @@ class FavoriteViewController: UIViewController {
         return label
     }()
 
-    private let allFavorites: [FavoriteItem] = []
-
+    private let context = DataController.shared.context
+    private var favoriteTrips: [InfoTrip] = []
+    private var filteredTrips: [InfoTrip] = []
     private var currentQuery = ""
 
     override func viewDidLoad() {
@@ -67,11 +60,13 @@ class FavoriteViewController: UIViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
 
         setupLayout()
-        filterFavorites(matching: "")
+        loadFavorites()
     }
-    
-    
-    
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        loadFavorites()
+    }
 
     private func setupNavigationBarAppearance() {
         let appearance = UINavigationBarAppearance()
@@ -90,7 +85,7 @@ class FavoriteViewController: UIViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
         navigationController?.navigationBar.compactAppearance = appearance
     }
-
+    //Local para fazer as buscas(nav bar)
     private func setupSearchController() {
         let searchController = UISearchController(searchResultsController: nil)
         searchController.searchBar.placeholder = "Buscar"
@@ -103,12 +98,11 @@ class FavoriteViewController: UIViewController {
         navigationItem.preferredSearchBarPlacement = .stacked
         searchController.searchBar.delegate = self
     }
-    
-//funcão que guarda sobre o posicionamento e adiciona uma subview
+
     private func setupLayout() {
         view.addSubview(sectionLabel)
         view.addSubview(tableView)
-        view.addSubview(emptyLabel) //Texto de "Nenhum favorito encontrado"
+        view.addSubview(emptyLabel)
 
         NSLayoutConstraint.activate([
             sectionLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
@@ -127,11 +121,39 @@ class FavoriteViewController: UIViewController {
         ])
     }
 
-    //Query = consulta
+    private func loadFavorites() {
+        let descriptor = FetchDescriptor<InfoTrip>(
+            predicate: #Predicate<InfoTrip> { trip in
+                trip.IsFavorite
+            },
+            sortBy: [SortDescriptor(\.DataIda, order: .forward)]
+        )
+
+        do {
+            favoriteTrips = try context.fetch(descriptor)
+        } catch {
+            favoriteTrips = []
+            print("Erro ao buscar favoritos: \(error)")
+        }
+
+        filterFavorites(matching: currentQuery)
+    }
+
     private func filterFavorites(matching consulta: String) {
         currentQuery = consulta
-        emptyLabel.isHidden = false
-        tableView.reloadData() //Filtro dos dados da ultima consulta para colocar na tabela
+
+        let query = consulta.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if query.isEmpty {
+            filteredTrips = favoriteTrips
+        } else {
+            filteredTrips = favoriteTrips.filter { trip in
+                trip.place.localizedCaseInsensitiveContains(query)
+            }
+        }
+
+        emptyLabel.isHidden = !filteredTrips.isEmpty
+        tableView.reloadData()
     }
 }
 
@@ -143,17 +165,29 @@ extension FavoriteViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        filterFavorites(matching: "")
+    }
 }
 
 extension FavoriteViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        0
+        filteredTrips.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let trip = filteredTrips[indexPath.row]
 
         var content = cell.defaultContentConfiguration()
+        content.text = trip.place
+
+        let departure = trip.DataIda.formatted(date: .abbreviated, time: .omitted)
+        let returnDate = trip.DataVotla.formatted(date: .abbreviated, time: .omitted)
+        content.secondaryText = "\(departure) → \(returnDate) • \(trip.Duration) dias"
+
         content.image = UIImage(systemName: "star.fill")
         content.imageProperties.tintColor = .systemYellow
 
